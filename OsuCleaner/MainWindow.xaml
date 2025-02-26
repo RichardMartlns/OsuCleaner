@@ -1,0 +1,8 @@
+﻿<Window x:Class="OsuCleaner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Osu Cleaner" Height="450" Width="800">
+    <Grid>
+        <Button Content="Search Maps" Click="BtnSearchMaps_Click" Width="150" Height="40"/>
+    </Grid>
+</Window>
