@@ -24,7 +24,7 @@ namespace OsuCleaner.Services
                 throw new DirectoryNotFoundException("The specified root folder does not exist.");
 
 
-            string[] folderMaps = Directory.GetDirectories(_rootDirectoryPath);
+            string[] folderMaps = Directory.GetDirectories(_rootDirectoryPath, "*", SearchOption.AllDirectories);
 
 
             foreach (string folder in folderMaps)
@@ -36,27 +36,43 @@ namespace OsuCleaner.Services
                 {
                     try
 
-                    {
-                        int mode = OsuFileReader.GetModeFromOsuFile(file);
+                    { 
+                        int? mode = OsuFileReader.GetModeFromOsuFile(file);
 
-                        if (!_mapsByMode.ContainsKey(mode))
+
+                        if (mode.HasValue)
                         {
-                            _mapsByMode[mode] = new List<string>();
-                        }
 
-                        _mapsByMode[mode].Add(file);
+                            if (!_mapsByMode.TryGetValue(mode.Value, out List<string>? value))
+                            {
+                                value = new List<string>();
+                                _mapsByMode[mode.Value] = value;
+                            }
+
+                            value.Add(file);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Skipping file {file} due to invalid mode.");
+                        }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Error when reading {file}: {ex.Message}");
                     }
-                }
+    
+                 }
             }
         }
 
         public Dictionary<int, List<string>> GetMapsByMode()
         {
-            return _mapsByMode; // retorna uma copia d
+            return new Dictionary<int, List<string>>(_mapsByMode);
+        }
+
+        public Dictionary<int, int> CountMapsByMode()
+        {
+            return _mapsByMode.ToDictionary(entry => entry.Key, entry => entry.Value.Count);
         }
     }
 }

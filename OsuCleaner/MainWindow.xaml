@@ -1,8 +1,62 @@
 ﻿<Window x:Class="OsuCleaner.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Osu Cleaner" Height="450" Width="800">
-    <Grid>
-        <Button Content="Search Maps" Click="BtnSearchMaps_Click" Width="150" Height="40"/>
+        Title="Osu Cleaner" Height="500" Width="800">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Line for folder select -->
+            <RowDefinition Height="Auto"/> <!-- Line for buttons -->
+            <RowDefinition Height="*"/>  <!-- Line for list -->
+        </Grid.RowDefinitions>
+        
+        <!-- Select Folder -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
+            <Button x:Name="BtnSelectFolder" Content="Select Folder" Width="120" Height="30"  Click="BtnSelectFolder_click"/>
+            <TextBlock x:Name="TxtSelectedPath" Text="No folder selected" VerticalAlignment="Center" Margin="10,0,0,0"/>
+        </StackPanel>
+        
+        
+        <!-- Buttons -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+            <Button x:Name="BtnSearchMaps" Content="Search Maps" Width="120" Height="30" Click="BtnSearchMaps_Click" Margin="5"/>
+            <Button x:Name="BtnDeleteMaps" Content="Delete Maps" Width="120" Height="30" Click="BtnDeleteMaps_click" Margin="5"/>
+        </StackPanel>
+
+
+        <!-- list of maps found -->
+        <Grid Grid.Row="2" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Filter line -->
+                <RowDefinition Height="*"/>
+                <!-- List line -->
+            </Grid.RowDefinitions>
+
+
+            <!-- Filter by mode -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
+                <TextBlock Text="Filter by Mode:" VerticalAlignment="Center" Margin="5"/>
+                <ComboBox x:Name="ModeFilter" Width="150" SelectionChanged="ModeFilter_SelectionChanged">
+                    <ComboBoxItem Content="All Mods" IsSelected="True"/>
+                    <ComboBoxItem Content="Mode 0"/>
+                    <ComboBoxItem Content="Mode 1"/>
+                    <ComboBoxItem Content="Mode 2"/>
+                    <ComboBoxItem Content="Mode 3"/>
+                    <ComboBoxItem Content="Mode 4"/>
+                    <ComboBoxItem Content="Mode 5"/>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- List -->
+            <ListView x:Name="MapListView" Grid.Row="1" Margin="5">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Mode" DisplayMemberBinding="{Binding Mode}" Width="100"/>
+                        <GridViewColumn Header="Count" DisplayMemberBinding="{Binding Count}" Width="200"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
     </Grid>
 </Window>
