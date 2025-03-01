@@ -1,59 +1,64 @@
 ﻿using System.IO;
-
+using OsuCleaner.Beatmap;
 
 
 namespace OsuCleaner.Services
 {
+
     public class OsuFileReader
     {
-        public static int? GetModeFromOsuFile(string filePath)
+
+        public static BeatmapInfo? ReadOsuFile(string filePath)
         {
 
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"The .osu file '{filePath}' cannot be read.");
-                return null;
-            }
+            if (!File.Exists(filePath)) return null;
+
+            BeatmapInfo beatmap = new BeatmapInfo() { FilePath = filePath }; 
+
 
             try
             {
 
-                foreach (string line in File.ReadLines(filePath))
+                using (var reader = new StreamReader(filePath))
                 {
-                    if (line.StartsWith("Mode:", StringComparison.OrdinalIgnoreCase))
+
+                    string? line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        string[] parts = line.Split(':');
 
-                        if (parts.Length == 2 && int.TryParse(parts[1].Trim(), out int mode))
-                        {
+                        if (line.StartsWith("Title:", StringComparison.OrdinalIgnoreCase))
+                            beatmap.Title = line.Split(':')[1].Trim();
 
-                            if (mode >= 0 && mode <= 5)
-                            {
-                                return mode;
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Error: Invalid mode ({mode}) found in file {filePath}.");
-                                return null;
-                            }
-                        }
+
+                        else if (line.StartsWith("Artist:", StringComparison.OrdinalIgnoreCase))
+                            beatmap.Artist = line.Split(':')[1].Trim();
+
+
+                        else if (line.StartsWith("Version:", StringComparison.OrdinalIgnoreCase))
+                            beatmap.Difficulty = line.Split(':')[1].Trim();
+
+
+                        else if (line.StartsWith("Mode:", StringComparison.OrdinalIgnoreCase) &&
+                                 int.TryParse(line.Split(':')[1].Trim(), out int mode))
+                            beatmap.Mode = mode.ToString();
+
+
+                        string mode1 = beatmap.Mode;
+                        if (beatmap.Title == "Unknown" || beatmap.Artist == "Unknow" || beatmap.Difficulty == "Unknown" || beatmap.Mode == "Unknown")
+                            continue;
+                        break;
                     }
                 }
-
-
-                Console.WriteLine($"Warning: no mode information found in file {filePath}");
-                return null;
             }
-            catch (IOException ex)
-            {
-                Console.WriteLine($"error reading file {filePath}: {ex.Message}");
-                return null;
-            }
+
             catch (Exception ex)
             {
-                Console.WriteLine($"unexpected error while processing the file {filePath}: {ex.Message}");
+
+                Console.WriteLine($"Error reading file {filePath}: {ex.Message}");
                 return null;
             }
+
+            return beatmap;
         }
     }
 }

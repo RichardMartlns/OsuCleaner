@@ -39,10 +39,10 @@
                 <TextBlock Text="Filter by Mode:" VerticalAlignment="Center" Margin="5"/>
                 <ComboBox x:Name="ModeFilter" Width="150" SelectionChanged="ModeFilter_SelectionChanged">
                     <ComboBoxItem Content="All Mods" IsSelected="True"/>
-                    <ComboBoxItem Content="Mode 0"/>
-                    <ComboBoxItem Content="Mode 1"/>
-                    <ComboBoxItem Content="Mode 2"/>
-                    <ComboBoxItem Content="Mode 3"/>
+                    <ComboBoxItem Content="Osu!"/>
+                    <ComboBoxItem Content="Osu! Taiko"/>
+                    <ComboBoxItem Content="Osu! Catch"/>
+                    <ComboBoxItem Content="Osu! Mania"/>
                     <ComboBoxItem Content="Mode 4"/>
                     <ComboBoxItem Content="Mode 5"/>
                 </ComboBox>
